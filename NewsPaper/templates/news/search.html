@@ -1,0 +1,53 @@
+{% extends 'flatpages/default.html' %}
+
+{% load custom_filters %}
+
+{% block title %}
+    Поиск
+{% endblock title %}
+
+{% block content %}
+    <h1>Новостная лента</h1>
+    {% if news %}
+        <p><i>Количество найденных новостей/статей: <u>{{ page_obj.paginator.count }}</u></i></p>
+
+        <form method="GET">
+            {{ filter.form.as_table }}
+            <input class="btn btn-lg btn-dark" type="submit" value="Найти">
+        </form>
+
+        <table>
+            <tr align="center">
+                <th>Заголовок</th>
+                <th>Краткое содержание</th>
+                <th>Дата публикации</th>
+                <th>Категория</th>
+            </tr>
+
+            {% for post in news %}
+            <tr>
+                <td align="left">
+                    {% if post.post_type == "NE" %}
+                        <a class="nav-link" href="/news/{{ post.id }}">{{ post.title|censor }}</a>
+                    {% else %}
+                        <a class="nav-link" href="/article/{{ post.id }}">{{ post.title|censor }}</a>
+                    {% endif %}
+                </td>
+                <td align="left">{{ post.text|censor|truncatechars:20 }}</td>
+                <td align="center">{{ post.datetime_post|date:'d M Y' }}</td>
+                <td>
+                    {% for category in post.category.all %}
+                        <a href="{% url 'category_list' category.id %}">{{ category }}</a>
+                    {% endfor %}
+                </td>
+             </tr>
+            {% endfor %}
+        </table>
+
+    {% else %}
+        <h2>Публикаций нет!</h2>
+    {% endif %}
+
+{% include "flatpages/paginate.html" %}
+
+{% endblock content %}

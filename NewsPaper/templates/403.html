@@ -1,0 +1,21 @@
+{% extends 'flatpages/default.html' %}
+
+{% block title %}
+    Профиль пользователя
+{% endblock title %}
+
+{% block content %}
+    <h3>ДОСТУП ЗАКРЫТ</h3>
+    <br>
+    <h5>Только автор может создавать и редактировать статьи.</h5>
+    <br><br>
+    <hr>
+    <div class="text-center" >
+        <button class="btn btn-lg btn-dark">
+            <a style="text-decoration: none; color: white" href="{% url 'upgrade' %}">Стать автором</a>
+        </button>
+        <button class="btn btn-lg btn-dark">
+            <a style="text-decoration: none; color: white" href="{% url 'post_list' %}">На главную</a>
+        </button>
+        </div>
+{% endblock content %}

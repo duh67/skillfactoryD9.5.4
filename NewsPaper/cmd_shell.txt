@@ -1,0 +1,58 @@
+from news.models import *
+
+u1 = User.objects.create_user(username='Анатолий')
+u2 = User.objects.create_user(username='Кирилл')
+
+a1 = Author.objects.create(user=u1)
+a2 = Author.objects.create(user=u2)
+
+cat1 = Category.objects.create(name='IT')
+cat2 = Category.objects.create(name='Финансы')
+cat3 = Category.objects.create(name='Спорт')
+cat4 = Category.objects.create(name='Авто')
+
+p1 = Post.objects.create(author=a1, post_type='AR', title='какая то статья', text='содержание статьи 1')
+p2 = Post.objects.create(author=a2, post_type='AR', title='еще одна статья', text='содержание статьи 2')
+p3 = Post.objects.create(author=a2, post_type='NE',title='новость', text='содержание новости ')
+
+p1.category.add(cat3, cat4)
+p2.category.add(cat2)
+p3.category.add(cat1)
+
+com1 = Comment.objects.create(post=p1, user=a1.user, text='комментарий 1')
+com2 = Comment.objects.create(post=p1, user=a2.user, text='комментарий 2')
+com3 = Comment.objects.create(post=p2, user=a1.user, text='комментарий 3')
+com4 = Comment.objects.create(post=p3, user=a2.user, text='комментарий 4')
+com5 = Comment.objects.create(post=p3, user=a2.user, text='комментарий 5')
+com6 = Comment.objects.create(post=p2, user=a1.user, text='комментарий 6')
+
+p1.like()
+p1.like()
+p2.like()
+p3.like()
+p3.dislike()
+
+com1.like()
+com2.like()
+com2.dislike()
+com3.like()
+com3.like()
+com4.like()
+com5.like()
+com6.dislike()
+
+a1.update_rating()
+a2.update_rating()
+
+authors = Author.objects.all().order_by("-rating").values("user__username", "rating")
+best_author = authors[0] if authors else None
+best_author
+
+from django.db.models import F
+posts = Post.objects.all().order_by("-rating").values("pk", "datetime_post", "author__user__username", "rating", "title", preview=F('text'))
+best_post = posts[0] if posts else None
+best_post
+
+Comment.objects.filter(post=best_post["pk"]).values("datetime_comment", "user__username",  "rating", "text")
+
+quit()

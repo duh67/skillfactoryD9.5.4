@@ -1,0 +1,47 @@
+{% extends 'flatpages/default.html' %}
+
+{% load custom_filters %}
+
+{% block title %}
+    Все новости
+{% endblock title %}
+
+
+{% block content %}
+    <h1>Новостная лента</h1>
+ {% if news %}
+    <p><i>Количество всех новостей: <u>{{ news|length }}</u></i></p>
+    <table>
+        <tr>
+            <td>Заголовок</td>
+            <td>Дата публикации</td>
+            <td>Краткое содержание</td>
+            <td>Категория</td>
+        </tr>
+
+         {% for post in news %}
+        <tr>
+            <td>
+                {% if post.post_type == "NE" %}
+                    <a class="nav-link" href="/news/{{ post.id }}">{{ post.title|censor }}</a>
+                {% else %}
+                   <a class="nav-link" href="/article/{{ post.id }}">{{ post.title|censor }}</a>
+                {% endif %}
+            </td>
+            <td>{{ post.datetime_post|date:'d M Y' }}</td>
+            <td align="left">{{ post.text|censor|truncatechars:20 }}</td>
+            <td>
+                {% for category in post.category.all %}
+                    <a href="{% url 'category_list' category.id %}">{{ category }}</a>
+                {% endfor %}
+            </td>
+        </tr>
+        {% endfor %}
+    </table>
+    {% else %}
+        <h2>Новостей нет!</h2>
+    {% endif %}
+
+{% include "flatpages/paginate.html" %}
+
+{% endblock content %}

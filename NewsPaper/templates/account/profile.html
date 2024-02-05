@@ -1,0 +1,23 @@
+{% extends 'flatpages/default.html' %}
+
+{% block title %}
+    Профиль пользователя
+{% endblock title %}
+
+{% block content %}
+    <h2>Страница авторизованного пользователя {{ request.user.username }}</h2>
+    <br>
+    {% if not is_not_authors %}
+        <h4>Вы являетесь автором!</h4>
+        <div>Вы можете создавать и редактировать новости и статьи.</div>
+    {% endif %}
+    <div>Информация.</div>
+    <br><br>
+    <hr>
+    <div class="text-center" >
+        {% if is_not_authors %}
+            <button class="btn btn-lg btn-dark"><a style="text-decoration: none; color: white" href="{% url 'upgrade' %}">Стать автором</a></button>
+        {% endif %}
+        <button class="btn btn-lg btn-dark"><a style="text-decoration: none; color: white" href="{% url 'account_logout' %}">Выйти</a></button>
+    </div>
+{% endblock content %}
